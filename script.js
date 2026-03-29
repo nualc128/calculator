@@ -27,8 +27,11 @@ const numberBtn = document.querySelectorAll(".numbers");
 const operatorBtn = document.querySelectorAll(".operators");
 const evalBtn = document.getElementById("eval");
 const clearBtn = document.getElementById("clear");
+const backspaceBtn = document.getElementById("backspace");
+const floatingPointBtn = document.getElementById("point");
 const display = document.getElementById("display");
 let value = "";
+let result = 0;
 
 
 numberBtn.forEach(button => {
@@ -37,8 +40,13 @@ numberBtn.forEach(button => {
             value = "";
             resetDisplay = false;
         }
-        value += event.target.innerText;
-        display.value = value;
+        if (value === "0" && event.target.innerText === "0") return;
+        if (value === "0" && event.target.innerText !== "0") {
+            value = event.target.innerText;
+        } else {
+            value += event.target.innerText;
+        }
+            display.value = value;    
     })
 });
 
@@ -49,10 +57,11 @@ operatorBtn.forEach(button => {
             resetDisplay = true;
             operator = event.target.innerText;
         } else if (resetDisplay) {
-            operator =event.target.innerText;
+            operator = event.target.innerText;
         } else {
             secondNumber = value;
-            value = operate(operator, +firstNumber, +secondNumber);
+            result = operate(operator, +firstNumber, +secondNumber);
+            value = roundResult(result);
             display.value = value;
             firstNumber = value;
             operator = event.target.innerText;
@@ -60,12 +69,14 @@ operatorBtn.forEach(button => {
         }
     })
 });
+
  evalBtn.addEventListener("click", (event) => {
     if (firstNumber === undefined) {
         display.value = value;
     } else {
         secondNumber = value;
-        value = operate(operator, +firstNumber, +secondNumber);
+        result = operate(operator, +firstNumber, +secondNumber);
+        value = roundResult(result);
         display.value = value;
         firstNumber = undefined;
         secondNumber = undefined;
@@ -79,3 +90,27 @@ clearBtn.addEventListener("click", (event) => {
     secondNumber = undefined;
     value = "";
 });
+
+backspaceBtn.addEventListener("click", (event) => {
+    value ? value = value.slice(0, -1) : value = 0;
+    value ? display.value = value : display.value = 0;
+});
+
+floatingPointBtn.addEventListener("click", (event) => {
+    if (resetDisplay) {
+        value = "0.";
+        resetDisplay = false;
+    } else {
+        if (!value.includes(".")) {
+            value = value === "" ? "0." : value + "."
+        }
+    }
+    display.value = value;
+});
+
+const roundResult = (num) => {
+    if (typeof num === "number") {
+        return Math.round(num * 1e10) / 1e10;
+    }
+    return result;
+};
