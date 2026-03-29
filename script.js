@@ -7,6 +7,8 @@ let firstNumber;
 let secondNumber;
 let operator;
 
+let resetDisplay = false;
+
 function operate(operator, firstNumber, secondNumber) {
     switch (operator) {
         case "+":
@@ -16,19 +18,25 @@ function operate(operator, firstNumber, secondNumber) {
         case "*":
             return multiply(firstNumber, secondNumber);
         case "/":
-            return divide(firstNumber, secondNumber);
+            return secondNumber === 0 ? "Don't you ever do that!" : divide(firstNumber, secondNumber);
+            
     }
 }
 
 const numberBtn = document.querySelectorAll(".numbers");
 const operatorBtn = document.querySelectorAll(".operators");
-const evaluate = document.getElementById("eval");
+const evalBtn = document.getElementById("eval");
+const clearBtn = document.getElementById("clear");
 const display = document.getElementById("display");
 let value = "";
 
 
 numberBtn.forEach(button => {
     button.addEventListener("click", (event) => {
+        if (resetDisplay) {
+            value = "";
+            resetDisplay = false;
+        }
         value += event.target.innerText;
         display.value = value;
     })
@@ -36,14 +44,38 @@ numberBtn.forEach(button => {
 
 operatorBtn.forEach(button => {
     button.addEventListener("click", (event) => {
-        firstNumber = value;
-        value = "";
-        operator = event.target.innerText;
+        if (firstNumber === undefined) {
+            firstNumber = value;
+            resetDisplay = true;
+            operator = event.target.innerText;
+        } else if (resetDisplay) {
+            operator =event.target.innerText;
+        } else {
+            secondNumber = value;
+            value = operate(operator, +firstNumber, +secondNumber);
+            display.value = value;
+            firstNumber = value;
+            operator = event.target.innerText;
+            resetDisplay = true;
+        }
     })
 });
+ evalBtn.addEventListener("click", (event) => {
+    if (firstNumber === undefined) {
+        display.value = value;
+    } else {
+        secondNumber = value;
+        value = operate(operator, +firstNumber, +secondNumber);
+        display.value = value;
+        firstNumber = undefined;
+        secondNumber = undefined;
+        resetDisplay = true; 
+    }
+});
 
-evaluate.addEventListener("click", (event) => {
-    secondNumber = value;
-    value = operate(operator, +firstNumber, +secondNumber);
-    display.value = value;
+clearBtn.addEventListener("click", (event) => {
+    display.value = 0;
+    firstNumber = undefined;
+    secondNumber = undefined;
+    value = "";
 });
