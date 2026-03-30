@@ -34,40 +34,48 @@ const display = document.getElementById("display");
 let value = "";
 let result = 0;
 
+const handleNumber = (num) => {
+    if (resetDisplay) {
+        value = "";
+        resetDisplay = false;
+    }
+    if (value === "0" && num === "0") return;
+    
+    if (value === "0" && num !== "0") {
+        value = num;
+    } else {
+        value += num;
+    }
+    display.value = value;
+};
 
 numberBtn.forEach(button => {
     button.addEventListener("click", (event) => {
-        if (resetDisplay) {
-            value = "";
-            resetDisplay = false;
-        }
-        if (value === "0" && event.target.innerText === "0") return;
-        if (value === "0" && event.target.innerText !== "0") {
-            value = event.target.innerText;
-        } else {
-            value += event.target.innerText;
-        }
-            display.value = value;    
+        handleNumber(event.target.innerText);
     })
 });
 
-operatorBtn.forEach(button => {
-    button.addEventListener("click", (event) => {
-        if (firstNumber === undefined) {
+const handleOperator = (sign) => {
+    if (firstNumber === undefined) {
             firstNumber = value;
             resetDisplay = true;
-            operator = event.target.innerText;
+            operator = sign;
         } else if (resetDisplay) {
-            operator = event.target.innerText;
+            operator = sign;
         } else {
             secondNumber = value;
             result = operate(operator, +firstNumber, +secondNumber);
             value = roundResult(result);
             display.value = value;
             firstNumber = value;
-            operator = event.target.innerText;
+            operator = sign;
             resetDisplay = true;
-        }
+        } 
+};
+
+operatorBtn.forEach(button => {
+    button.addEventListener("click", (event) => {
+        handleOperator(event.target.innerText);
     })
 });
 
@@ -89,7 +97,8 @@ clearBtn.addEventListener("click", (event) => {
     display.value = 0;
     firstNumber = undefined;
     secondNumber = undefined;
-    value = "";
+    value = 0;
+    resetDisplay = true;
 });
 
 backspaceBtn.addEventListener("click", (event) => {
@@ -121,3 +130,26 @@ const roundResult = (num) => {
     }
     return result;
 };
+
+document.addEventListener("keydown", (event) => {
+    const key = event.key;
+
+    if (key >= "0" && key <= "9") {
+        handleNumber(key);
+    }
+    if (["+", "-", "*", "/"].includes(key)) {
+        handleOperator(key);
+    }
+    if (key === "Enter" || key === "=") {
+        evalBtn.click(); // Wir lösen einfach den Klick auf den Button aus
+    }
+    if (key === "Backspace") {
+        backspaceBtn.click();
+    }
+    if (key === "Escape" || key.toLowerCase() === "c") {
+        clearBtn.click();
+    }
+    if (key === "." || key === ",") {
+        floatingPointBtn.click();
+    }
+});
