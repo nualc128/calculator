@@ -29,6 +29,7 @@ const evalBtn = document.getElementById("eval");
 const clearBtn = document.getElementById("clear");
 const backspaceBtn = document.getElementById("backspace");
 const floatingPointBtn = document.getElementById("point");
+const clearEntryBtn = document.getElementById("clear-entry");
 const display = document.getElementById("display");
 let value = "";
 let result = 0;
@@ -107,6 +108,12 @@ floatingPointBtn.addEventListener("click", (event) => {
     }
     display.value = value;
 });
+
+clearEntryBtn.addEventListener("click", (event) => {
+    value = 0;
+    display.value = value;
+    resetDisplay = true;
+})
 
 const roundResult = (num) => {
     if (typeof num === "number") {

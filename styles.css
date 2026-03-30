@@ -1,0 +1,55 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    width: 210px;
+    background-color: rgb(156, 226, 174);
+    padding: 8px;
+    border: 1px solid black;
+    border-radius: 10px;
+    gap: 10px;
+}
+
+#buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px;
+    justify-content: center;
+}
+
+button {
+    width: 50px;
+    height: 40px;
+    font-weight: bold;
+    font-size: large;
+    border: 1px solid grey;
+    border-radius: 5px;
+    background-color: rgb(204, 245, 245);
+}
+
+#display {
+    text-align: right;
+    border: 0px;
+    height: 40px;
+    font-size: xx-large;
+    font-weight: bold;
+    background-color: rgb(188, 255, 233);
+    border-radius: 5px;
+}
+
+#null {
+    width: 102px;
+}
+
+.operators {
+    background-color: rgb(137, 209, 211);
+    margin-left: 2px;
+}
+
+#eval {
+    background-color: rgb(137, 209, 211);
+    margin-left: 2px;
+}
+
+.delete {
+    background-color: rgb(202, 232, 255);
+}
